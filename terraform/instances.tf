@@ -22,6 +22,8 @@ resource "aws_instance" "backend" {
   vpc_security_group_ids = [aws_security_group.backend_sg.id]
   subnet_id              = module.backend_vpc.private_subnets[0]
 
+  user_data = templatefile("${path.module}/user_data/backend_flask.sh", {})
+
   tags = {
     Name = "backend-ec2"
   }
