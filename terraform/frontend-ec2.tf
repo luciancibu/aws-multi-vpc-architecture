@@ -14,7 +14,7 @@ resource "aws_instance" "frontend_ec2" {
 user_data = <<-EOF
 #!/bin/bash
 yum update -y
-yum install -y nginx
+amazon-linux-extras install -y nginx1
 systemctl restart nginx
 systemctl enable nginx
 EOF
