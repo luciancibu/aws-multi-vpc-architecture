@@ -57,27 +57,28 @@ resource "aws_security_group_rule" "frontend_from_alb" {
   source_security_group_id = aws_security_group.alb_sg.id
 }
 
-# resource "aws_security_group_rule" "frontend_to_backend" {
-#   security_group_id        = aws_security_group.frontend_sg.id
+resource "aws_security_group_rule" "frontend_to_backend" {
+  security_group_id        = aws_security_group.frontend_sg.id
   
-#   description              = "Outbound to backend Flask"
-#   type                     = "egress"
-#   from_port                = 5000
-#   to_port                  = 5000
-#   protocol                 = "tcp"
-#   source_security_group_id = aws_security_group.backend_sg.id
-# }
-
-resource "aws_security_group_rule" "frontend_egress_all" {
-  security_group_id = aws_security_group.frontend_sg.id
-
-  description = "Allow outbound internet"
-  type        = "egress"
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
+  description              = "Outbound to backend Flask"
+  type                     = "egress"
+  from_port                = 5000
+  to_port                  = 5000
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.backend_sg.id
 }
+
+# Used only to provide internet access for the backend EC2 to install required packages. 
+# resource "aws_security_group_rule" "frontend_egress_all" {
+#   security_group_id = aws_security_group.frontend_sg.id
+
+#   description = "Allow outbound internet"
+#   type        = "egress"
+#   from_port   = 0
+#   to_port     = 0
+#   protocol    = "-1"
+#   cidr_blocks = ["0.0.0.0/0"]
+# }
 
 
 # Backend sg
@@ -103,11 +104,23 @@ resource "aws_security_group_rule" "backend_to_rds" {
   
   description = "Allow outbound internet"
   type        = "egress"
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
+  from_port   = 3306
+  to_port     = 3306
+  protocol    = "tcp"
+  source_security_group_id = aws_security_group.rds_sg.id
 }
+
+# Used only to provide internet access for the backend EC2 to install required packages. 
+# resource "aws_security_group_rule" "backend_to_rds" {
+#   security_group_id        = aws_security_group.backend_sg.id
+  
+#   description = "Allow outbound internet"
+#   type        = "egress"
+#   from_port   = 0
+#   to_port     = 0
+#   protocol    = "-1"
+#   cidr_blocks = ["0.0.0.0/0"]
+# }
 
 # RDS sg
 resource "aws_security_group" "rds_sg" {
@@ -126,15 +139,3 @@ resource "aws_security_group_rule" "rds_from_backend" {
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.backend_sg.id
 }
-
-# resource "aws_security_group_rule" "rds_to_backend" {
-#   security_group_id        = aws_security_group.rds_sg.id
-  
-#   description              = "RDS back to backend"
-#   type                     = "egress"
-#   from_port                = 3306
-#   to_port                  = 3306
-#   protocol                 = "tcp"
-#   source_security_group_id = aws_security_group.backend_sg.id
-# }
-
