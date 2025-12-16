@@ -66,3 +66,11 @@ resource "aws_route" "backend_to_frontend" {
   destination_cidr_block     = "10.1.0.0/16"
   vpc_peering_connection_id  = aws_vpc_peering_connection.frontend_backend.id
 }
+
+resource "aws_route" "frontend_to_backend" {
+  for_each = toset(module.frontend_vpc.private_route_table_ids)
+
+  route_table_id            = each.value
+  destination_cidr_block    = "10.2.0.0/16"
+  vpc_peering_connection_id = aws_vpc_peering_connection.frontend_backend.id
+}

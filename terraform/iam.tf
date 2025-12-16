@@ -17,6 +17,7 @@ module "ec2_ssm_role" {
 
   policies = {
     AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    SecretsManagerReadWrite     = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
   }
 
   tags = {

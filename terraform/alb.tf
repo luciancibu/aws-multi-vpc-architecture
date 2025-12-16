@@ -15,7 +15,6 @@ resource "aws_lb" "frontend_alb" {
   }
 }
 
-
 # Target Group -> alb sends the traffic
 resource "aws_lb_target_group" "frontend_tg" {
   name     = "frontend-tg"
