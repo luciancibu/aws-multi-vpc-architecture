@@ -31,8 +31,11 @@ module "backend_vpc" {
   azs = ["us-east-1a", "us-east-1b"]
 
   private_subnets = ["10.2.1.0/24", "10.2.2.0/24"]
+  public_subnets = ["10.2.101.0/24"]
 
-  enable_nat_gateway = false
+
+  enable_nat_gateway = true
+  single_nat_gateway = true //default the nat will be here: "10.1.101.0/24"(us-east-1a), so if us-east-1a will crash then the subntes from us-east-1b (10.1.102.0/24") will not have internet connection => fix 2 nat for each public subnet
   enable_vpn_gateway = false
 
   tags = {

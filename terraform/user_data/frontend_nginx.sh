@@ -467,6 +467,14 @@ server {
     location / {
         try_files \$uri \$uri/ =404;
     }
+
+    # -------- Backend API (Flask) --------
+    location ~ ^/(view|health|info|metrics) {
+        proxy_pass http://${backend_ip}:5000;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    }
 }
 EOF
 
