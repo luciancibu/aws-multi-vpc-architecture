@@ -42,3 +42,14 @@ resource "aws_lb_listener" "http" {
     target_group_arn = aws_lb_target_group.frontend_tg.arn
   }
 }
+
+# Attach EC2 frontend to Target Group
+resource "aws_lb_target_group_attachment" "frontend_attachment" {
+  target_group_arn = aws_lb_target_group.frontend_tg.arn
+  target_id        = aws_instance.frontend_ec2.id
+  port             = 80
+  
+  depends_on = [
+    aws_instance.frontend_ec2
+  ]  
+}
